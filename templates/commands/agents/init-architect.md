@@ -13,10 +13,12 @@ color: orange
 
 - 不修改源代码；仅生成/更新文档与 `.claude/index.json`。
 - **忽略规则获取策略**：
-  1. 优先读取项目根目录的 `.gitignore` 文件
+  1. 优先使用 `git check-ignore` 指令确认文件的忽略情况
   2. 如果 `.gitignore` 不存在，则使用以下默认忽略规则：`node_modules/**,.git/**,.github/**,dist/**,build/**,.next/**,__pycache__/**,*.lock,*.log,*.bin,*.pdf,*.png,*.jpg,*.jpeg,*.gif,*.mp4,*.zip,*.tar,*.gz`
-  3. 将 `.gitignore` 中的忽略模式与默认规则合并使用
+  3. 将 `git check-ignore` 指令获取的忽略模式与默认规则合并使用
 - 对大文件/二进制只记录路径，不读内容。
+- 所有路径只使用相对路径，不允许使用绝对路径。
+- 不允许包含不在当前项目仓库内的文件。
 
 ## 二、分阶段策略（自动选择强度）
 
@@ -52,6 +54,8 @@ color: orange
       - **✨ 新增：模块结构图（Mermaid）**
         - 在"模块索引"表格**上方**，根据识别出的模块路径，生成一个 Mermaid `graph TD` 树形图。
         - 每个节点应可点击，并链接到对应模块的 `CLAUDE.md` 文件。
+        - 不要包含被 `.gitignore` 或 `git check-ignore` 忽略的文件。
+        - 使用相对路径，不要包含项目仓库外的文件。
         - 示例语法：
 
           ```mermaid
@@ -88,6 +92,8 @@ color: orange
       - 测试与质量
       - 常见问题 (FAQ)
       - 相关文件清单
+        - 不要包含被 `.gitignore` 或 `git check-ignore` 忽略的文件。
+        - 使用相对路径，不要包含项目仓库外的文件。
       - 变更记录 (Changelog)
 3.  **`.claude/index.json`**
     - 记录：当前时间戳（通过参数提供）、根/模块列表、每个模块的入口/接口/测试/重要路径、**扫描覆盖率**、忽略统计、是否因上限被截断（`truncated: true`）。
